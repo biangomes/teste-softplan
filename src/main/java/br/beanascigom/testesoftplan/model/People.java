@@ -1,6 +1,5 @@
 package br.beanascigom.testesoftplan.model;
 
-import br.beanascigom.testesoftplan.validation.UniqueCPF;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -17,8 +16,6 @@ import java.time.LocalDate;
 import java.time.OffsetDateTime;
 
 @Entity
-@Table(uniqueConstraints = @UniqueConstraint(name = "uk_people_cpf", columnNames = "cpf"))
-@UniqueCPF
 @Getter
 @Setter
 @AllArgsConstructor
