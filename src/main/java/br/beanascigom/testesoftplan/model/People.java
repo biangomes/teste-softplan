@@ -1,16 +1,12 @@
 package br.beanascigom.testesoftplan.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Past;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.hibernate.validator.constraints.br.CPF;
 
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
@@ -20,29 +16,32 @@ import java.time.OffsetDateTime;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "people")
 public class People {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
+    @Column(nullable = false)
     private String name;
 
     @Enumerated(EnumType.STRING)
+    @Column
     private Gender gender;
 
-    @Email
+    @Column(nullable = false)
     private String email;
 
-    @Past
+    @Column
     private LocalDate birth;
 
+    @Column
     private String state;
 
+    @Column
     private String country;
 
-    @CPF
-    @Column(length = 11, unique = true)
+    @Column(nullable = false)
     private String cpf;
 
     @Embedded
@@ -55,12 +54,4 @@ public class People {
     @UpdateTimestamp
     @Column(nullable = false)
     private OffsetDateTime updatedAt;
-
-    @PrePersist
-    @PreUpdate
-    private void normalizeCpf() {
-        if (cpf != null) {
-            cpf = cpf.replaceAll("\\D", "");
-        }
-    }
 }
