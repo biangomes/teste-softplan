@@ -43,6 +43,9 @@ public class People {
 
     private String cpf;
 
+    @Embedded
+    private Address address;
+
     @CreationTimestamp
     @Column(nullable = false, updatable = false)
     private OffsetDateTime createdAt;
