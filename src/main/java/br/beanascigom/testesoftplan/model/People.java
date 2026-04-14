@@ -1,5 +1,7 @@
 package br.beanascigom.testesoftplan.model;
 
+import br.beanascigom.testesoftplan.validation.CPFValid;
+import br.beanascigom.testesoftplan.validation.UniqueCPF;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -12,10 +14,11 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 
 @Entity
+@Table(uniqueConstraints = @UniqueConstraint(name = "uk_people_cpf", columnNames = "cpf"))
+@UniqueCPF
 @Getter
 @Setter
 @AllArgsConstructor
@@ -41,6 +44,8 @@ public class People {
 
     private String country;
 
+    @CPFValid
+    @Column(length = 11, unique = true)
     private String cpf;
 
     @Embedded
@@ -53,4 +58,12 @@ public class People {
     @UpdateTimestamp
     @Column(nullable = false)
     private OffsetDateTime updatedAt;
+
+    @PrePersist
+    @PreUpdate
+    private void normalizeCpf() {
+        if (cpf != null) {
+            cpf = cpf.replaceAll("\\D", "");
+        }
+    }
 }
