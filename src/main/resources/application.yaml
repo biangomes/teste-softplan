@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: teste-softplan
+  profiles:
+    default: dev
+  jpa:
+    open-in-view: false
+
+server:
+  port: 8080
