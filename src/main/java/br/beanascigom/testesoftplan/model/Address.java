@@ -8,7 +8,6 @@ public class Address {
     private String street;
     private String number;
     private String zipcode;
-    private String country;
     private String neighborhood;
     private String complement;
 }
