@@ -10,9 +10,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.validator.constraints.br.CPF;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 
 @Entity
@@ -41,6 +41,8 @@ public class People {
 
     private String country;
 
+    @CPF
+    @Column(length = 11, unique = true)
     private String cpf;
 
     @Embedded
@@ -53,4 +55,12 @@ public class People {
     @UpdateTimestamp
     @Column(nullable = false)
     private OffsetDateTime updatedAt;
+
+    @PrePersist
+    @PreUpdate
+    private void normalizeCpf() {
+        if (cpf != null) {
+            cpf = cpf.replaceAll("\\D", "");
+        }
+    }
 }
