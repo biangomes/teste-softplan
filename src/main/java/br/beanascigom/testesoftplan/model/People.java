@@ -1,6 +1,5 @@
 package br.beanascigom.testesoftplan.model;
 
-import br.beanascigom.testesoftplan.validation.CPFValid;
 import br.beanascigom.testesoftplan.validation.UniqueCPF;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -12,6 +11,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.validator.constraints.br.CPF;
 
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
@@ -44,7 +44,7 @@ public class People {
 
     private String country;
 
-    @CPFValid
+    @CPF
     @Column(length = 11, unique = true)
     private String cpf;
 
