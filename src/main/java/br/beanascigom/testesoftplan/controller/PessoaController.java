@@ -1,23 +1,49 @@
 package br.beanascigom.testesoftplan.controller;
 
+import br.beanascigom.testesoftplan.dto.PessoaRequestDTO;
+import br.beanascigom.testesoftplan.dto.PessoaResponseDTO;
 import br.beanascigom.testesoftplan.service.PessoaService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
-@RequestMapping("pessoa")
+@RequestMapping("/api/v1/pessoas")
 public class PessoaController {
     @Autowired
     private PessoaService service;
 
-    @GetMapping("/v1/{id}")
-    public ResponseEntity<Object> buscaPessoaV1(@PathVariable Long id) {
+    @PostMapping
+    public ResponseEntity<PessoaResponseDTO> criar(@Valid @RequestBody PessoaRequestDTO request) {
+        PessoaResponseDTO pessoa = service.criar(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(pessoa);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<PessoaResponseDTO> atualizar(@PathVariable Long id,
+                                                       @Valid @RequestBody PessoaRequestDTO request) {
+        PessoaResponseDTO pessoa = service.atualizar(id, request);
+        return ResponseEntity.ok(pessoa);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<PessoaResponseDTO> buscaPessoaPorId(@PathVariable Long id) {
         var pessoa = service.buscaPessoaPorId(id);
-        return new ResponseEntity<>(pessoa, HttpStatus.OK);
+        return ResponseEntity.ok(pessoa);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<PessoaResponseDTO>> listarPessoas() {
+        return ResponseEntity.ok(service.listarPessoas());
     }
 }
