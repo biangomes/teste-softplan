@@ -29,8 +29,9 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(ResourceNoContentException.class)
-    public ResponseEntity<Object> handleResourceNoContentException(ResourceNoContentException ex) {
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<Object> handleResourceNoContentException(ResourceNoContentException ex, HttpServletRequest request) {
+        return buildResponse(HttpStatus.NO_CONTENT, ex.getMessage() != null ? ex.getMessage() : "Não há registro para retornar",
+                request.getRequestURI(), null);
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
