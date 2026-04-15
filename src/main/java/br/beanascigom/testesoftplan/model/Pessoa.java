@@ -1,6 +1,8 @@
 package br.beanascigom.testesoftplan.model;
 
+import br.beanascigom.testesoftplan.util.ICpfValidator;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -29,6 +31,7 @@ public class Pessoa {
     @Column
     private Sexo sexo;
 
+    @Email
     @Column(nullable = false)
     private String email;
 
@@ -41,6 +44,7 @@ public class Pessoa {
     @Column
     private String pais;
 
+    @ICpfValidator
     @Column(nullable = false)
     private String cpf;
 
