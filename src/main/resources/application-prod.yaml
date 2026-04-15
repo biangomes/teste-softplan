@@ -15,6 +15,7 @@ spring:
       hibernate:
         jdbc:
           time_zone: UTC
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
   sql:
     init:
       mode: never

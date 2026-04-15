@@ -1,9 +1,6 @@
 package br.beanascigom.testesoftplan.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Past;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,39 +9,49 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 @Entity
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class People {
+@Table(schema = "public", name = "pessoa")
+public class Pessoa {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
-    private String name;
+    @Column(nullable = false)
+    private String nome;
 
     @Enumerated(EnumType.STRING)
-    private Gender gender;
+    @Column
+    private Sexo sexo;
 
-    @Email
+    @Column(nullable = false)
     private String email;
 
-    @Past
-    private LocalDate birth;
+    @Column
+    private LocalDate dataNascimento;
 
-    private String state;
+    @Column
+    private String estado;
 
-    private String country;
+    @Column
+    private String pais;
 
+    @Column(nullable = false)
     private String cpf;
 
+    @Embedded
+    private Endereco endereco;
+
     @CreationTimestamp
-    private LocalDateTime createdAt;
+    @Column(nullable = false, updatable = false)
+    private OffsetDateTime dataCriacao;
 
     @UpdateTimestamp
-    private LocalDateTime updatedAt;
+    @Column(nullable = false)
+    private OffsetDateTime dataAtualizacao;
 }
