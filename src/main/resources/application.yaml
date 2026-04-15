@@ -2,7 +2,7 @@ spring:
   application:
     name: teste-softplan
   profiles:
-    default: dev
+    default: prod
   jpa:
     open-in-view: false
 
