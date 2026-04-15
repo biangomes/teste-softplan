@@ -16,42 +16,42 @@ import java.time.OffsetDateTime;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "people")
-public class People {
+@Table(schema = "public", name = "pessoa")
+public class Pessoa {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
-    private String name;
+    private String nome;
 
     @Enumerated(EnumType.STRING)
     @Column
-    private Gender gender;
+    private Sexo sexo;
 
     @Column(nullable = false)
     private String email;
 
     @Column
-    private LocalDate birth;
+    private LocalDate dataNascimento;
 
     @Column
-    private String state;
+    private String estado;
 
     @Column
-    private String country;
+    private String pais;
 
     @Column(nullable = false)
     private String cpf;
 
     @Embedded
-    private Address address;
+    private Endereco endereco;
 
     @CreationTimestamp
     @Column(nullable = false, updatable = false)
-    private OffsetDateTime createdAt;
+    private OffsetDateTime dataCriacao;
 
     @UpdateTimestamp
     @Column(nullable = false)
-    private OffsetDateTime updatedAt;
+    private OffsetDateTime dataAtualizacao;
 }
