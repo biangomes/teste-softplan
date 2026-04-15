@@ -3,6 +3,9 @@ package br.beanascigom.testesoftplan.model;
 import br.beanascigom.testesoftplan.util.ICpfValidator;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Past;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,6 +27,7 @@ public class Pessoa {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank
     @Column(nullable = false)
     private String nome;
 
@@ -35,10 +39,12 @@ public class Pessoa {
     @Column(nullable = false)
     private String email;
 
-    @Column
+    @Past
+    @Column(nullable = false)
     private LocalDate dataNascimento;
 
     @Column
+    @Max(2)
     private String estado;
 
     @Column
