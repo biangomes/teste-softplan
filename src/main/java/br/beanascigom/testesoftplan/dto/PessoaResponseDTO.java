@@ -1,6 +1,7 @@
 package br.beanascigom.testesoftplan.dto;
 
 import br.beanascigom.testesoftplan.model.Sexo;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -22,6 +23,7 @@ public class PessoaResponseDTO implements Serializable {
     private String nome;
     private Sexo sexo;
     private String email;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
     private LocalDate dataNascimento;
     private String estado;
     private String pais;
