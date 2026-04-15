@@ -22,20 +22,20 @@ import java.util.Map;
 @RestControllerAdvice
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
-    @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<Object> handleResourceNotFoundException(ResourceNotFoundException ex, HttpServletRequest request) {
-        return buildResponse(HttpStatus.NOT_FOUND, ex.getMessage() != null ? ex.getMessage() : "Recurso nao encontrado",
-                request.getRequestURI(), null);
+    @ExceptionHandler(BusinessException.class)
+    public ResponseEntity<Object> handleBusinessException(BusinessException ex, HttpServletRequest request) {
+        return buildResponse(ex.getStatus(), resolveMessage(ex, "Erro de negocio"), request.getRequestURI(), null);
     }
 
-    @ExceptionHandler(ResourceNoContentException.class)
-    public ResponseEntity<Object> handleResourceNoContentException(ResourceNoContentException ex, HttpServletRequest request) {
-        return buildResponse(HttpStatus.NO_CONTENT, ex.getMessage() != null ? ex.getMessage() : "Não há registro para retornar",
-                request.getRequestURI(), null);
+    @ExceptionHandler(BusinessCheckedException.class)
+    public ResponseEntity<Object> handleBusinessCheckedException(BusinessCheckedException ex,
+            HttpServletRequest request) {
+        return buildResponse(ex.getStatus(), resolveMessage(ex, "Erro de negocio"), request.getRequestURI(), null);
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<Object> handleConstraintViolationException(ConstraintViolationException ex, HttpServletRequest request) {
+    public ResponseEntity<Object> handleConstraintViolationException(ConstraintViolationException ex,
+            HttpServletRequest request) {
         Map<String, String> violacoes = new LinkedHashMap<>();
         ex.getConstraintViolations().forEach(violation -> violacoes.put(
                 violation.getPropertyPath().toString(),
@@ -47,20 +47,20 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)
-    public ResponseEntity<Object> handleDataIntegrityViolationException(DataIntegrityViolationException ex, HttpServletRequest request) {
-        return buildResponse(HttpStatus.CONFLICT, "Violacao de integridade de dados", request.getRequestURI(),
-                null);
+    public ResponseEntity<Object> handleDataIntegrityViolationException(DataIntegrityViolationException ex,
+            HttpServletRequest request) {
+        return buildResponse(HttpStatus.CONFLICT, "Violacao de integridade de dados", request.getRequestURI(), null);
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Object> handleUnexpectedException(Exception ex, HttpServletRequest request) {
-        return buildResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Erro interno inesperado",
-                request.getRequestURI(), null);
+        return buildResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Erro interno inesperado", request.getRequestURI(),
+                null);
     }
 
     @Override
-    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers,
-            HttpStatusCode status, WebRequest request) {
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
+            HttpHeaders headers, HttpStatusCode status, WebRequest request) {
 
         Map<String, String> erros = new LinkedHashMap<>();
         for (FieldError error : ex.getBindingResult().getFieldErrors()) {
@@ -72,17 +72,25 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @Override
-    protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex, HttpHeaders headers,
-            HttpStatusCode status, WebRequest request) {
+    protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex,
+            HttpHeaders headers, HttpStatusCode status, WebRequest request) {
 
         return buildResponse(HttpStatus.BAD_REQUEST, "Corpo da requisicao invalido ou malformado",
                 extractPath(request), null);
     }
 
-    private ResponseEntity<Object> buildResponse(HttpStatus status, String mensagem, String caminho, Map<String, String> erros) {
+    private ResponseEntity<Object> buildResponse(HttpStatus status, String mensagem, String caminho,
+            Map<String, String> erros) {
         ErrorResponse body = new ErrorResponse(OffsetDateTime.now(), status.value(), status.getReasonPhrase(),
                 mensagem, caminho, erros);
         return ResponseEntity.status(status).body(body);
+    }
+
+    private String resolveMessage(Exception ex, String fallback) {
+        if (ex.getMessage() == null || ex.getMessage().isBlank()) {
+            return fallback;
+        }
+        return ex.getMessage();
     }
 
     private String extractPath(WebRequest request) {
@@ -91,5 +99,6 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     private record ErrorResponse(OffsetDateTime timestamp, int status, String erro,
-            String mensagem, String caminho, Map<String, String> erros) {}
+            String mensagem, String caminho, Map<String, String> erros) {
+    }
 }
