@@ -1,6 +1,6 @@
 package br.beanascigom.testesoftplan.controller;
 
-import br.beanascigom.testesoftplan.dto.PessoaRequestDTO;
+import br.beanascigom.testesoftplan.dto.PessoaRequestV2DTO;
 import br.beanascigom.testesoftplan.dto.PessoaResponseDTO;
 import br.beanascigom.testesoftplan.service.PessoaService;
 import jakarta.validation.Valid;
@@ -12,29 +12,27 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping({"/pessoas/v1", "/api/v1/pessoas"})
-public class PessoaController {
+@RequestMapping("/api/v2/pessoas")
+public class PessoaV2Controller {
 
     @Autowired
     private PessoaService service;
 
     @PostMapping("/")
-    public ResponseEntity<PessoaResponseDTO> criar(@Valid @RequestBody PessoaRequestDTO request) {
+    public ResponseEntity<PessoaResponseDTO> criar(@Valid @RequestBody PessoaRequestV2DTO request) {
         PessoaResponseDTO pessoa = service.criar(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(pessoa);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<PessoaResponseDTO> atualizar(@PathVariable Long id,
-                                                       @Valid @RequestBody PessoaRequestDTO request) {
+    public ResponseEntity<PessoaResponseDTO> atualizar(@PathVariable Long id, @Valid @RequestBody PessoaRequestV2DTO request) {
         PessoaResponseDTO pessoa = service.atualizar(id, request);
         return ResponseEntity.ok(pessoa);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<PessoaResponseDTO> buscaPessoaPorId(@PathVariable Long id) {
-        var pessoa = service.buscaPessoaPorId(id);
-        return ResponseEntity.ok(pessoa);
+        return ResponseEntity.ok(service.buscaPessoaPorId(id));
     }
 
     @GetMapping("/")

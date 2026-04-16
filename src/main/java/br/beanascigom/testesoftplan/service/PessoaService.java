@@ -1,9 +1,12 @@
 package br.beanascigom.testesoftplan.service;
 
+import br.beanascigom.testesoftplan.dto.EnderecoRequestDTO;
 import br.beanascigom.testesoftplan.dto.PessoaRequestDTO;
+import br.beanascigom.testesoftplan.dto.PessoaRequestV2DTO;
 import br.beanascigom.testesoftplan.dto.PessoaResponseDTO;
 import br.beanascigom.testesoftplan.exception.BusinessConflictException;
 import br.beanascigom.testesoftplan.exception.BusinessNotFoundException;
+import br.beanascigom.testesoftplan.model.Endereco;
 import br.beanascigom.testesoftplan.model.Pessoa;
 import br.beanascigom.testesoftplan.repository.PessoaRepository;
 import org.slf4j.Logger;
@@ -37,6 +40,18 @@ public class PessoaService {
         return toResponse(saved);
     }
 
+    public PessoaResponseDTO criar(PessoaRequestV2DTO request) {
+        logger.debug("Payload de entrada: {}", mapper.writeValueAsString(request));
+        String cpfNormalizado = normalizaCpf(request.getCpf());
+        validaUnificidadeCpf(cpfNormalizado, null);
+
+        Pessoa pessoa = new Pessoa();
+        convertePayloadV2ParaEntidade(request, pessoa, cpfNormalizado);
+
+        Pessoa saved = repo.save(pessoa);
+        return toResponse(saved);
+    }
+
     public PessoaResponseDTO atualizar(Long id, PessoaRequestDTO request) {
         Pessoa pessoa = repo.findById(id)
                 .orElseThrow(() -> new BusinessNotFoundException("Pessoa nao encontrada."));
@@ -45,6 +60,18 @@ public class PessoaService {
         validaUnificidadeCpf(cpfNormalizado, id);
 
         convertePayloadParaEntidade(request, pessoa, cpfNormalizado);
+        Pessoa saved = repo.save(pessoa);
+        return toResponse(saved);
+    }
+
+    public PessoaResponseDTO atualizar(Long id, PessoaRequestV2DTO request) {
+        Pessoa pessoa = repo.findById(id)
+                .orElseThrow(() -> new BusinessNotFoundException("Pessoa nao encontrada."));
+
+        String cpfNormalizado = normalizaCpf(request.getCpf());
+        validaUnificidadeCpf(cpfNormalizado, id);
+
+        convertePayloadV2ParaEntidade(request, pessoa, cpfNormalizado);
         Pessoa saved = repo.save(pessoa);
         return toResponse(saved);
     }
@@ -85,6 +112,26 @@ public class PessoaService {
         pessoa.setEstado(request.getEstado());
         pessoa.setPais(request.getPais());
         pessoa.setCpf(cpfNormalizado);
+    }
+
+    private void convertePayloadV2ParaEntidade(PessoaRequestV2DTO request, Pessoa pessoa, String cpfNormalizado) {
+        convertePayloadParaEntidade(request, pessoa, cpfNormalizado);
+        pessoa.setEndereco(converteEndereco(request.getEndereco()));
+    }
+
+    private Endereco converteEndereco(EnderecoRequestDTO enderecoRequest) {
+        if (enderecoRequest == null) {
+            return null;
+        }
+
+        Endereco endereco = new Endereco();
+        endereco.setCidade(enderecoRequest.getCidade());
+        endereco.setRua(enderecoRequest.getRua());
+        endereco.setNumero(enderecoRequest.getNumero());
+        endereco.setCep(enderecoRequest.getCep());
+        endereco.setBairro(enderecoRequest.getBairro());
+        endereco.setComplemento(enderecoRequest.getComplemento());
+        return endereco;
     }
 
     private PessoaResponseDTO toResponse(Pessoa pessoa) {
