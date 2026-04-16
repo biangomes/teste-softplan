@@ -38,16 +38,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @WebAppConfiguration
 @ActiveProfiles("dev")
-@TestPropertySource(properties = {
-        "app.security.basic.username=teste",
-        "app.security.basic.password=teste123"
-})
+@TestPropertySource(properties = {"app.security.basic.username=teste", "app.security.basic.password=teste123"})
 class PessoaControllerTest {
 
     private static final String USERNAME = "teste";
     private static final String PASSWORD = "teste123";
-
-    private MockMvc mockMvc;
+    private static final String apiUrl = "/pessoas/v1";
 
     @Autowired
     private WebApplicationContext context;
@@ -55,7 +51,7 @@ class PessoaControllerTest {
     @Autowired
     private PessoaService pessoaService;
 
-    private static final String apiUrl = "/pessoas/v1";
+    private MockMvc mockMvc;
 
     @BeforeEach
     void setup() {
@@ -66,7 +62,7 @@ class PessoaControllerTest {
 
     @Test
     void criar_quandoRequestValido_deveRetornarCreated() throws Exception {
-        when(pessoaService.criar(any())).thenReturn(PessoaBuilder.getPessoaBuilder());
+        when(pessoaService.criar(any(PessoaRequestDTO.class))).thenReturn(PessoaBuilder.getPessoaBuilder());
 
         mockMvc.perform(post(apiUrl + "/")
                         .with(usuarioAutenticado())
@@ -107,7 +103,7 @@ class PessoaControllerTest {
 
     @Test
     void atualizar_quandoRequestValido_deveRetornarOk() throws Exception {
-        when(pessoaService.atualizar(any(Long.class), any())).thenReturn(PessoaBuilder.getPessoaBuilder());
+        when(pessoaService.atualizar(any(Long.class), any(PessoaRequestDTO.class))).thenReturn(PessoaBuilder.getPessoaBuilder());
 
         mockMvc.perform(put(apiUrl + "/{id}", 1)
                         .with(usuarioAutenticado())
@@ -155,6 +151,21 @@ class PessoaControllerTest {
                 .andExpect(jsonPath("$.length()").value(2))
                 .andExpect(jsonPath("$[0].id").value(1))
                 .andExpect(jsonPath("$[1].nome").value("Joao"));
+    }
+
+    @Test
+    void listarPessoas_noPathCompativelApiV1_deveRetornarLista() throws Exception {
+        List<PessoaResponseDTO> pessoas = List.of(
+                PessoaResponseDTO.builder().id(1L).nome("Maria").build()
+        );
+
+        when(pessoaService.listarPessoas()).thenReturn(pessoas);
+
+        mockMvc.perform(get("/api/v1/pessoas/")
+                        .with(usuarioAutenticado()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(1))
+                .andExpect(jsonPath("$[0].nome").value("Maria"));
     }
 
     @Test
