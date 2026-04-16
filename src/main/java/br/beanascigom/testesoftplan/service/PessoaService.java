@@ -58,6 +58,11 @@ public class PessoaService {
         return repo.findAll().stream().map(this::toResponse).toList();
     }
 
+    public PessoaResponseDTO deletarPessoa(Long id) {
+        Pessoa pessoaExiste = repo.findById(id).orElseThrow(() -> new BusinessNotFoundException("Pessoa nao encontrada."));
+        return toResponse(pessoaExiste);
+    }
+
     private void validaUnificidadeCpf(String cpf, Long id) {
         logger.info("Validando se CPF é unico");
         boolean duplicado = id == null ? repo.existsByCpf(cpf) : repo.existsByCpfAndIdNot(cpf, id);
