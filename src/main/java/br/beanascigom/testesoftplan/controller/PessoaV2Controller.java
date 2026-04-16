@@ -3,6 +3,7 @@ package br.beanascigom.testesoftplan.controller;
 import br.beanascigom.testesoftplan.dto.PessoaRequestV2DTO;
 import br.beanascigom.testesoftplan.dto.PessoaResponseDTO;
 import br.beanascigom.testesoftplan.service.PessoaService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,7 +20,7 @@ public class PessoaV2Controller {
     private PessoaService service;
 
     @PostMapping("/")
-    public ResponseEntity<PessoaResponseDTO> criar(@Valid @RequestBody PessoaRequestV2DTO request) {
+    public ResponseEntity<PessoaResponseDTO> criar(@Valid @RequestBody PessoaRequestV2DTO request) throws JsonProcessingException {
         PessoaResponseDTO pessoa = service.criar(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(pessoa);
     }

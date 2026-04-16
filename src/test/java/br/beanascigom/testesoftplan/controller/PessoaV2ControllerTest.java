@@ -34,7 +34,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @WebAppConfiguration
-@ActiveProfiles("dev")
+@ActiveProfiles("test")
 @TestPropertySource(properties = {"app.security.basic.username=teste", "app.security.basic.password=teste123"})
 class PessoaV2ControllerTest {
 

@@ -1,6 +1,7 @@
 package br.beanascigom.testesoftplan.controller;
 
 import br.beanascigom.testesoftplan.builder.PessoaBuilder;
+import br.beanascigom.testesoftplan.config.SecurityConfig;
 import br.beanascigom.testesoftplan.dto.PessoaRequestDTO;
 import br.beanascigom.testesoftplan.dto.PessoaResponseDTO;
 import br.beanascigom.testesoftplan.exception.BusinessNotFoundException;
@@ -8,9 +9,13 @@ import br.beanascigom.testesoftplan.service.PessoaService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.MediaType;
@@ -27,18 +32,15 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest
-@WebAppConfiguration
-@ActiveProfiles("dev")
-@TestPropertySource(properties = {"app.security.basic.username=teste", "app.security.basic.password=teste123"})
+@WebMvcTest(PessoaController.class)
+@AutoConfigureMockMvc(addFilters = false)
+@ActiveProfiles("test")
 class PessoaControllerTest {
 
     private static final String USERNAME = "teste";
@@ -48,9 +50,10 @@ class PessoaControllerTest {
     @Autowired
     private WebApplicationContext context;
 
-    @Autowired
+    @MockBean
     private PessoaService pessoaService;
 
+    @Autowired
     private MockMvc mockMvc;
 
     @BeforeEach
