@@ -26,7 +26,7 @@ public class PessoaService {
     private ObjectMapper mapper;
 
     public PessoaResponseDTO criar(PessoaRequestDTO request) {
-        logger.info("Payload de entrada: {}", mapper.writeValueAsString(request));
+        logger.debug("Payload de entrada: {}", mapper.writeValueAsString(request));
         String cpfNormalizado = normalizaCpf(request.getCpf());
         validaUnificidadeCpf(cpfNormalizado, null);
 

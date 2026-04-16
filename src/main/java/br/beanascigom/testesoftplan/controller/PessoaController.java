@@ -18,31 +18,31 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/pessoas")
+@RequestMapping("pessoas")
 public class PessoaController {
     @Autowired
     private PessoaService service;
 
-    @PostMapping
+    @PostMapping("/v1/")
     public ResponseEntity<PessoaResponseDTO> criar(@Valid @RequestBody PessoaRequestDTO request) {
         PessoaResponseDTO pessoa = service.criar(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(pessoa);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/v1/{id}")
     public ResponseEntity<PessoaResponseDTO> atualizar(@PathVariable Long id,
                                                        @Valid @RequestBody PessoaRequestDTO request) {
         PessoaResponseDTO pessoa = service.atualizar(id, request);
         return ResponseEntity.ok(pessoa);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/v1/{id}")
     public ResponseEntity<PessoaResponseDTO> buscaPessoaPorId(@PathVariable Long id) {
         var pessoa = service.buscaPessoaPorId(id);
         return ResponseEntity.ok(pessoa);
     }
 
-    @GetMapping
+    @GetMapping("/v1/")
     public ResponseEntity<List<PessoaResponseDTO>> listarPessoas() {
         return ResponseEntity.ok(service.listarPessoas());
     }
