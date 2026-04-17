@@ -40,7 +40,7 @@ Para subir a aplicação, obedeça os seguintes passos:
 Rode:
 
 ```bash
-docker run -p 8080:8080 -p 3000:3000 --name teste-softplan -d teste-softplan
+docker run -p 8080:8080 -p 3000:3000 --name teste-softplan -d biangomes/teste-softplan
 ```
 
 ou
