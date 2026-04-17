@@ -65,7 +65,12 @@ public class PessoaController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Object> deletar(@PathVariable Long id) {
-        return ResponseEntity.ok(service.deletarPessoa(id));
+    @Operation(summary = "Deleta dados de pessoas", description = "Endpoint para deletar dados de pessoas por ID")
+    @ApiResponse(responseCode = "204", description = "Pessoa deletada com sucesso")
+    @ApiResponse(responseCode = "401", description = "Usuário nao autorizado")
+    @ApiResponse(responseCode = "404", description = "Pessoa com ID nao encontrada")
+    public ResponseEntity<Void> deletar(@PathVariable Long id) {
+        service.deletarPessoa(id);
+        return ResponseEntity.noContent().build();
     }
 }

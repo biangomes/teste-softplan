@@ -2,7 +2,7 @@ spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/teste-softplan
     driver-class-name: org.postgresql.Driver
-    username: postgress # ${DB_USERNAME}
+    username: postgres # ${DB_USERNAME}
     password: root      # ${DB_PASSWORD}
   jpa:
     hibernate:

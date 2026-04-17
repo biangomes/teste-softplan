@@ -1,6 +1,7 @@
 package br.beanascigom.testesoftplan.service;
 
 import br.beanascigom.testesoftplan.dto.EnderecoRequestDTO;
+import br.beanascigom.testesoftplan.dto.EnderecoResponseDTO;
 import br.beanascigom.testesoftplan.dto.PessoaRequestDTO;
 import br.beanascigom.testesoftplan.dto.PessoaRequestV2DTO;
 import br.beanascigom.testesoftplan.dto.PessoaResponseDTO;
@@ -86,9 +87,10 @@ public class PessoaService {
         return repo.findAll().stream().map(this::toResponse).toList();
     }
 
-    public PessoaResponseDTO deletarPessoa(Long id) {
+    public void deletarPessoa(Long id) {
         Pessoa pessoaExiste = repo.findById(id).orElseThrow(() -> new BusinessNotFoundException("Pessoa nao encontrada."));
-        return toResponse(pessoaExiste);
+        repo.delete(pessoaExiste);
+        logger.info("Pessoa com ID {} foi excluida com sucesso.", id);
     }
 
     private void validaUnificidadeCpf(String cpf, Long id) {
@@ -136,6 +138,18 @@ public class PessoaService {
     }
 
     private PessoaResponseDTO toResponse(Pessoa pessoa) {
+        EnderecoResponseDTO enderecoResponse = null;
+        if (pessoa.getEndereco() != null) {
+            enderecoResponse = EnderecoResponseDTO.builder()
+                    .cidade(pessoa.getEndereco().getCidade())
+                    .rua(pessoa.getEndereco().getRua())
+                    .numero(pessoa.getEndereco().getNumero())
+                    .cep(pessoa.getEndereco().getCep())
+                    .bairro(pessoa.getEndereco().getBairro())
+                    .complemento(pessoa.getEndereco().getComplemento())
+                    .build();
+        }
+
         return PessoaResponseDTO.builder()
                 .id(pessoa.getId())
                 .nome(pessoa.getNome())
@@ -145,6 +159,7 @@ public class PessoaService {
                 .estado(pessoa.getEstado())
                 .pais(pessoa.getPais())
                 .cpf(pessoa.getCpf())
+                .endereco(enderecoResponse)
                 .dataCriacao(pessoa.getDataCriacao())
                 .dataAtualizacao(pessoa.getDataAtualizacao())
                 .build();

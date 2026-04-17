@@ -8,7 +8,15 @@ const initialForm = {
   dataNascimento: '',
   estado: '',
   pais: '',
-  cpf: ''
+  cpf: '',
+  endereco: {
+    cidade: '',
+    rua: '',
+    numero: '',
+    cep: '',
+    bairro: '',
+    complemento: ''
+  }
 };
 
 function formatDateToBackend(dateValue) {
@@ -79,22 +87,12 @@ function App() {
     setErrorMessage('');
 
     try {
-      let response = await fetch(`/api/v1/pessoas/${id}`, {
+      const response = await fetch(`/api/v2/pessoas/${id}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json'
         }
       });
-
-      // Fallback para versões antigas da API, se necessário
-      if (response.status === 404) {
-        response = await fetch(`/pessoas/${id}`, {
-          method: 'DELETE',
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        });
-      }
 
       const responseBody = await readJsonSafely(response);
 
@@ -124,11 +122,7 @@ function App() {
     setListError('');
 
     try {
-      let response = await fetch('/pessoas/');
-
-      if (response.status === 404) {
-        response = await fetch('/pessoas/v1/');
-      }
+      const response = await fetch('/api/v2/pessoas/');
 
       if (!response.ok) {
         setListError('Nao foi possivel carregar as pessoas cadastradas.');
@@ -152,10 +146,23 @@ function App() {
 
   const handleChange = (event) => {
     const { name, value } = event.target;
-    setForm((prev) => ({
-      ...prev,
-      [name]: value
-    }));
+
+    // Verifica se é um campo de endereço (nome começa com "endereco.")
+    if (name.startsWith('endereco.')) {
+      const enderecoField = name.split('.')[1];
+      setForm((prev) => ({
+        ...prev,
+        endereco: {
+          ...prev.endereco,
+          [enderecoField]: enderecoField === 'numero' ? (value ? parseInt(value) : '') : value
+        }
+      }));
+    } else {
+      setForm((prev) => ({
+        ...prev,
+        [name]: value
+      }));
+    }
   };
 
   const handleSubmit = async (event) => {
@@ -167,31 +174,25 @@ function App() {
     const payload = {
       ...form,
       sexo: form.sexo || null,
-      dataNascimento: formatDateToBackend(form.dataNascimento)
+      dataNascimento: formatDateToBackend(form.dataNascimento),
+      endereco: {
+        ...form.endereco,
+        numero: form.endereco.numero ? parseInt(form.endereco.numero) : null
+      }
     };
 
     try {
       let response;
       if (editingId) {
-        response = await fetch(`/pessoas/${editingId}`, {
+        response = await fetch(`/api/v2/pessoas/${editingId}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json'
           },
           body: JSON.stringify(payload)
         });
-
-        if (response.status === 404) {
-          response = await fetch(`/pessoas/v1/${editingId}`, {
-            method: 'PUT',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(payload)
-          });
-        }
       } else {
-        response = await fetch('/pessoas/v1/', {
+        response = await fetch('/api/v2/pessoas/', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -233,7 +234,15 @@ function App() {
       dataNascimento: formatDateToInput(pessoa.dataNascimento),
       estado: pessoa.estado || '',
       pais: pessoa.pais || '',
-      cpf: pessoa.cpf || ''
+      cpf: pessoa.cpf || '',
+      endereco: {
+        cidade: pessoa.endereco?.cidade || '',
+        rua: pessoa.endereco?.rua || '',
+        numero: pessoa.endereco?.numero || '',
+        cep: pessoa.endereco?.cep || '',
+        bairro: pessoa.endereco?.bairro || '',
+        complemento: pessoa.endereco?.complemento || ''
+      }
     });
   };
 
@@ -251,8 +260,8 @@ function App() {
           <h1>{editingId ? 'Editar Pessoa' : 'Cadastro de Pessoa'}</h1>
           <p>
             {editingId
-              ? 'Edite os dados e envie para o endpoint PUT /pessoas/{id}.'
-              : 'Preencha os campos e envie para o endpoint POST /pessoas/v1.'}
+              ? 'Edite os dados e envie para o endpoint PUT /api/v2/pessoas/{id}.'
+              : 'Preencha os campos e envie para o endpoint POST /api/v2/pessoas/.'}
           </p>
 
           <form onSubmit={handleSubmit} className="person-form">
@@ -288,6 +297,25 @@ function App() {
             <label htmlFor="pais">Pais</label>
             <input id="pais" name="pais" value={form.pais} onChange={handleChange} />
 
+            <h3>Endereço*</h3>
+
+            <label htmlFor="endereco.cidade">Cidade*</label>
+            <input id="endereco.cidade" name="endereco.cidade" value={form.endereco.cidade} onChange={handleChange} required />
+
+            <label htmlFor="endereco.rua">Rua*</label>
+            <input id="endereco.rua" name="endereco.rua" value={form.endereco.rua} onChange={handleChange} required />
+
+            <label htmlFor="endereco.numero">Número*</label>
+            <input id="endereco.numero" name="endereco.numero" type="number" value={form.endereco.numero} onChange={handleChange} required />
+
+            <label htmlFor="endereco.cep">CEP*</label>
+            <input id="endereco.cep" name="endereco.cep" value={form.endereco.cep} onChange={handleChange} required />
+
+            <label htmlFor="endereco.bairro">Bairro*</label>
+            <input id="endereco.bairro" name="endereco.bairro" value={form.endereco.bairro} onChange={handleChange} required />
+
+            <label htmlFor="endereco.complemento">Complemento</label>
+            <input id="endereco.complemento" name="endereco.complemento" value={form.endereco.complemento} onChange={handleChange} />
 
             <div className="form-actions">
               <button type="submit" disabled={loading}>
@@ -350,8 +378,9 @@ function App() {
                       <td>
                         <button
                             type="button"
-                            className="table-edit-button"
-                            onClick={() => handleStartEdit(pessoa)}
+                            className="table-delete-button"
+                            onClick={() => handleDelete(pessoa.id)}
+                            disabled={loading}
                         >
                           Excluir
                         </button>

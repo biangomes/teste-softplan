@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v2/pessoas")
+@RequestMapping({"/pessoas/v2", "/api/v2/pessoas"})
 public class PessoaV2Controller {
 
     @Autowired
@@ -42,7 +42,8 @@ public class PessoaV2Controller {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Object> deletar(@PathVariable Long id) {
-        return ResponseEntity.ok(service.deletarPessoa(id));
+    public ResponseEntity<Void> deletar(@PathVariable Long id) {
+        service.deletarPessoa(id);
+        return ResponseEntity.noContent().build();
     }
 }
