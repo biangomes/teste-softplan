@@ -60,6 +60,14 @@ DOCKER_BUILDKIT=0 docker compose up --build
 
 3. Acesse `http://localhost:3000` para acessar a aplicação.
 
+## Execução da aplicação via Dockerhub
+
+Baixe a imagem `biangomes/teste-softplan-completo` do Dockerhub e execute o comando:
+
+```bash
+docker run -p 8080:8080 -p 3000:3000 --name teste-softplan -d biangomes/teste-softplan-completo
+```
+
 ## Documentação
 
 A documentação está acessível através do Swagger, disponível em `http://localhost:8080/swagger-ui/index.html`.
