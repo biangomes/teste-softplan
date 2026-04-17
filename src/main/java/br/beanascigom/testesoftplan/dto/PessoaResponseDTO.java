@@ -28,6 +28,7 @@ public class PessoaResponseDTO implements Serializable {
     private String estado;
     private String pais;
     private String cpf;
+    private EnderecoResponseDTO endereco;
     private OffsetDateTime dataCriacao;
     private OffsetDateTime dataAtualizacao;
 }

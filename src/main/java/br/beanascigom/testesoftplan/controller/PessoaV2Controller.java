@@ -3,6 +3,7 @@ package br.beanascigom.testesoftplan.controller;
 import br.beanascigom.testesoftplan.dto.PessoaRequestV2DTO;
 import br.beanascigom.testesoftplan.dto.PessoaResponseDTO;
 import br.beanascigom.testesoftplan.service.PessoaService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,14 +13,14 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v2/pessoas")
+@RequestMapping({"/pessoas/v2", "/api/v2/pessoas"})
 public class PessoaV2Controller {
 
     @Autowired
     private PessoaService service;
 
     @PostMapping("/")
-    public ResponseEntity<PessoaResponseDTO> criar(@Valid @RequestBody PessoaRequestV2DTO request) {
+    public ResponseEntity<PessoaResponseDTO> criar(@Valid @RequestBody PessoaRequestV2DTO request) throws JsonProcessingException {
         PessoaResponseDTO pessoa = service.criar(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(pessoa);
     }
@@ -41,7 +42,8 @@ public class PessoaV2Controller {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Object> deletar(@PathVariable Long id) {
-        return ResponseEntity.ok(service.deletarPessoa(id));
+    public ResponseEntity<Void> deletar(@PathVariable Long id) {
+        service.deletarPessoa(id);
+        return ResponseEntity.noContent().build();
     }
 }

@@ -7,6 +7,8 @@ import br.beanascigom.testesoftplan.exception.BusinessNotFoundException;
 import br.beanascigom.testesoftplan.model.Pessoa;
 import br.beanascigom.testesoftplan.model.Sexo;
 import br.beanascigom.testesoftplan.repository.PessoaRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,21 +16,16 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import tools.jackson.databind.ObjectMapper;
 
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class PessoaServiceTest {
@@ -72,7 +69,7 @@ public class PessoaServiceTest {
     }
 
     @Test
-    void criar_deveSalvarPessoaComCpfNormalizado() {
+    void criar_deveSalvarPessoaComCpfNormalizado() throws JsonProcessingException {
         when(repository.existsByCpf("12345678909")).thenReturn(false);
         when(repository.save(any(Pessoa.class))).thenReturn(pessoa);
 

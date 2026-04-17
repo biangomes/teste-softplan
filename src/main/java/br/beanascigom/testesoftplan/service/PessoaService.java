@@ -1,6 +1,7 @@
 package br.beanascigom.testesoftplan.service;
 
 import br.beanascigom.testesoftplan.dto.EnderecoRequestDTO;
+import br.beanascigom.testesoftplan.dto.EnderecoResponseDTO;
 import br.beanascigom.testesoftplan.dto.PessoaRequestDTO;
 import br.beanascigom.testesoftplan.dto.PessoaRequestV2DTO;
 import br.beanascigom.testesoftplan.dto.PessoaResponseDTO;
@@ -9,11 +10,12 @@ import br.beanascigom.testesoftplan.exception.BusinessNotFoundException;
 import br.beanascigom.testesoftplan.model.Endereco;
 import br.beanascigom.testesoftplan.model.Pessoa;
 import br.beanascigom.testesoftplan.repository.PessoaRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import tools.jackson.databind.ObjectMapper;
 
 
 import java.util.List;
@@ -28,7 +30,7 @@ public class PessoaService {
     @Autowired
     private ObjectMapper mapper;
 
-    public PessoaResponseDTO criar(PessoaRequestDTO request) {
+    public PessoaResponseDTO criar(PessoaRequestDTO request) throws JsonProcessingException {
         logger.debug("Payload de entrada: {}", mapper.writeValueAsString(request));
         String cpfNormalizado = normalizaCpf(request.getCpf());
         validaUnificidadeCpf(cpfNormalizado, null);
@@ -40,7 +42,7 @@ public class PessoaService {
         return toResponse(saved);
     }
 
-    public PessoaResponseDTO criar(PessoaRequestV2DTO request) {
+    public PessoaResponseDTO criar(PessoaRequestV2DTO request) throws JsonProcessingException {
         logger.debug("Payload de entrada: {}", mapper.writeValueAsString(request));
         String cpfNormalizado = normalizaCpf(request.getCpf());
         validaUnificidadeCpf(cpfNormalizado, null);
@@ -85,9 +87,10 @@ public class PessoaService {
         return repo.findAll().stream().map(this::toResponse).toList();
     }
 
-    public PessoaResponseDTO deletarPessoa(Long id) {
+    public void deletarPessoa(Long id) {
         Pessoa pessoaExiste = repo.findById(id).orElseThrow(() -> new BusinessNotFoundException("Pessoa nao encontrada."));
-        return toResponse(pessoaExiste);
+        repo.delete(pessoaExiste);
+        logger.info("Pessoa com ID {} foi excluida com sucesso.", id);
     }
 
     private void validaUnificidadeCpf(String cpf, Long id) {
@@ -135,6 +138,18 @@ public class PessoaService {
     }
 
     private PessoaResponseDTO toResponse(Pessoa pessoa) {
+        EnderecoResponseDTO enderecoResponse = null;
+        if (pessoa.getEndereco() != null) {
+            enderecoResponse = EnderecoResponseDTO.builder()
+                    .cidade(pessoa.getEndereco().getCidade())
+                    .rua(pessoa.getEndereco().getRua())
+                    .numero(pessoa.getEndereco().getNumero())
+                    .cep(pessoa.getEndereco().getCep())
+                    .bairro(pessoa.getEndereco().getBairro())
+                    .complemento(pessoa.getEndereco().getComplemento())
+                    .build();
+        }
+
         return PessoaResponseDTO.builder()
                 .id(pessoa.getId())
                 .nome(pessoa.getNome())
@@ -144,6 +159,7 @@ public class PessoaService {
                 .estado(pessoa.getEstado())
                 .pais(pessoa.getPais())
                 .cpf(pessoa.getCpf())
+                .endereco(enderecoResponse)
                 .dataCriacao(pessoa.getDataCriacao())
                 .dataAtualizacao(pessoa.getDataAtualizacao())
                 .build();

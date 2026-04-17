@@ -1,5 +1,7 @@
 package br.beanascigom.testesoftplan.config;
 
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
+import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,7 +18,10 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
+@SecurityScheme(name = SecurityConfig.BASIC_AUTH_SCHEME, type = SecuritySchemeType.HTTP, scheme = "basic")
 public class SecurityConfig {
+
+    public static final String BASIC_AUTH_SCHEME = "Basic";
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -25,6 +30,8 @@ public class SecurityConfig {
                 .httpBasic(Customizer.withDefaults())
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(HttpMethod.GET, "/source").permitAll()
+                        .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html",
+                                "/v3/api-docs", "/swagger-resources/**", "/webjars/**").permitAll()
                         .anyRequest().authenticated());
 
         return http.build();

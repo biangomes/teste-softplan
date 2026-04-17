@@ -1,0 +1,615 @@
+{
+  "info": {
+    "name": "Teste Softplan - API V1 e V2",
+    "description": "Collection com todos os endpoints do projeto Teste Softplan, incluindo versões V1 e V2 da API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Source",
+      "description": "Endpoints informativos do projeto",
+      "item": [
+        {
+          "name": "Get Source Repository",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/source",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "source"
+              ]
+            },
+            "description": "Retorna a URL do repositório do projeto"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "API V1 - Sem Endereço",
+      "description": "Endpoints da versão 1 - Endereço é opcional",
+      "item": [
+        {
+          "name": "V1 - Criar Pessoa",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "// Defina suas credenciais aqui",
+                  "pm.environment.set('username', 'seu_usuario');",
+                  "pm.environment.set('password', 'sua_senha');"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{username}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "{{password}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"COLOQUE_O_NOME_AQUI\",\n  \"cpf\": \"COLOQUE_O_CPF_AQUI\",\n  \"sexo\": \"H_OU_M_OU_DEIXE_VAZIO\",\n  \"email\": \"COLOQUE_O_EMAIL_AQUI_OU_DEIXE_VAZIO\",\n  \"dataNascimento\": \"DD/MM/YYYY\",\n  \"estado\": \"UF_COLOQUE_AQUI_OU_DEIXE_VAZIO\",\n  \"pais\": \"COLOQUE_O_PAIS_AQUI_OU_DEIXE_VAZIO\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/pessoas/v1/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "pessoas",
+                "v1",
+                ""
+              ]
+            },
+            "description": "Cria uma nova pessoa. Apenas 'nome', 'cpf' e 'dataNascimento' são obrigatórios. Endereço é opcional."
+          },
+          "response": []
+        },
+        {
+          "name": "V1 - Listar Todas as Pessoas",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.environment.set('username', 'seu_usuario');",
+                  "pm.environment.set('password', 'sua_senha');"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{username}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "{{password}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/pessoas/v1/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "pessoas",
+                "v1",
+                ""
+              ]
+            },
+            "description": "Retorna a lista de todas as pessoas cadastradas na versão V1"
+          },
+          "response": []
+        },
+        {
+          "name": "V1 - Buscar Pessoa por ID",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.environment.set('username', 'seu_usuario');",
+                  "pm.environment.set('password', 'sua_senha');"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{username}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "{{password}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/pessoas/v1/{{pessoa_id_v1}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "pessoas",
+                "v1",
+                "{{pessoa_id_v1}}"
+              ]
+            },
+            "description": "Busca uma pessoa específica pelo ID. Substitua {{pessoa_id_v1}} pelo ID desejado"
+          },
+          "response": []
+        },
+        {
+          "name": "V1 - Editar Pessoa",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.environment.set('username', 'seu_usuario');",
+                  "pm.environment.set('password', 'sua_senha');"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{username}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "{{password}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"NOVO_NOME_AQUI\",\n  \"cpf\": \"NOVO_CPF_AQUI\",\n  \"sexo\": \"H_OU_M_OU_DEIXE_VAZIO\",\n  \"email\": \"NOVO_EMAIL_AQUI_OU_DEIXE_VAZIO\",\n  \"dataNascimento\": \"DD/MM/YYYY\",\n  \"estado\": \"NOVA_UF_AQUI_OU_DEIXE_VAZIO\",\n  \"pais\": \"NOVO_PAIS_AQUI_OU_DEIXE_VAZIO\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/pessoas/v1/{{pessoa_id_v1}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "pessoas",
+                "v1",
+                "{{pessoa_id_v1}}"
+              ]
+            },
+            "description": "Edita uma pessoa existente. Substitua {{pessoa_id_v1}} pelo ID desejado"
+          },
+          "response": []
+        },
+        {
+          "name": "V1 - Deletar Pessoa",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.environment.set('username', 'seu_usuario');",
+                  "pm.environment.set('password', 'sua_senha');"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{username}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "{{password}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/pessoas/v1/{{pessoa_id_v1}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "pessoas",
+                "v1",
+                "{{pessoa_id_v1}}"
+              ]
+            },
+            "description": "Deleta uma pessoa existente. Substitua {{pessoa_id_v1}} pelo ID desejado"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "API V2 - Com Endereço Obrigatório",
+      "description": "Endpoints da versão 2 - Endereço é obrigatório",
+      "item": [
+        {
+          "name": "V2 - Criar Pessoa",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.environment.set('username', 'seu_usuario');",
+                  "pm.environment.set('password', 'sua_senha');"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{username}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "{{password}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"COLOQUE_O_NOME_AQUI\",\n  \"cpf\": \"COLOQUE_O_CPF_AQUI\",\n  \"sexo\": \"H_OU_M_OU_DEIXE_VAZIO\",\n  \"email\": \"COLOQUE_O_EMAIL_AQUI_OU_DEIXE_VAZIO\",\n  \"dataNascimento\": \"DD/MM/YYYY\",\n  \"estado\": \"UF_COLOQUE_AQUI_OU_DEIXE_VAZIO\",\n  \"pais\": \"COLOQUE_O_PAIS_AQUI_OU_DEIXE_VAZIO\",\n  \"endereco\": {\n    \"cidade\": \"CIDADE_OBRIGATORIA\",\n    \"rua\": \"RUA_OBRIGATORIA\",\n    \"numero\": \"NUMERO_OBRIGATORIO_INTEIRO\",\n    \"cep\": \"CEP_OBRIGATORIO\",\n    \"bairro\": \"BAIRRO_OBRIGATORIO\",\n    \"complemento\": \"COMPLEMENTO_OPCIONAL\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v2/pessoas/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v2",
+                "pessoas",
+                ""
+              ]
+            },
+            "description": "Cria uma nova pessoa com endereço obrigatório. Campos obrigatórios: nome, cpf, dataNascimento, e TODOS os campos de endereço"
+          },
+          "response": []
+        },
+        {
+          "name": "V2 - Listar Todas as Pessoas",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.environment.set('username', 'seu_usuario');",
+                  "pm.environment.set('password', 'sua_senha');"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{username}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "{{password}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v2/pessoas/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v2",
+                "pessoas",
+                ""
+              ]
+            },
+            "description": "Retorna a lista de todas as pessoas cadastradas na versão V2"
+          },
+          "response": []
+        },
+        {
+          "name": "V2 - Buscar Pessoa por ID",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.environment.set('username', 'seu_usuario');",
+                  "pm.environment.set('password', 'sua_senha');"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{username}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "{{password}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v2/pessoas/{{pessoa_id_v2}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v2",
+                "pessoas",
+                "{{pessoa_id_v2}}"
+              ]
+            },
+            "description": "Busca uma pessoa específica pelo ID. Substitua {{pessoa_id_v2}} pelo ID desejado"
+          },
+          "response": []
+        },
+        {
+          "name": "V2 - Editar Pessoa",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.environment.set('username', 'seu_usuario');",
+                  "pm.environment.set('password', 'sua_senha');"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{username}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "{{password}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"NOVO_NOME_AQUI\",\n  \"cpf\": \"NOVO_CPF_AQUI\",\n  \"sexo\": \"H_OU_M_OU_DEIXE_VAZIO\",\n  \"email\": \"NOVO_EMAIL_AQUI_OU_DEIXE_VAZIO\",\n  \"dataNascimento\": \"DD/MM/YYYY\",\n  \"estado\": \"NOVA_UF_AQUI_OU_DEIXE_VAZIO\",\n  \"pais\": \"NOVO_PAIS_AQUI_OU_DEIXE_VAZIO\",\n  \"endereco\": {\n    \"cidade\": \"CIDADE_OBRIGATORIA\",\n    \"rua\": \"RUA_OBRIGATORIA\",\n    \"numero\": \"NUMERO_OBRIGATORIO_INTEIRO\",\n    \"cep\": \"CEP_OBRIGATORIO\",\n    \"bairro\": \"BAIRRO_OBRIGATORIO\",\n    \"complemento\": \"COMPLEMENTO_OPCIONAL\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v2/pessoas/{{pessoa_id_v2}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v2",
+                "pessoas",
+                "{{pessoa_id_v2}}"
+              ]
+            },
+            "description": "Edita uma pessoa existente com endereço obrigatório. Substitua {{pessoa_id_v2}} pelo ID desejado"
+          },
+          "response": []
+        },
+        {
+          "name": "V2 - Deletar Pessoa",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.environment.set('username', 'seu_usuario');",
+                  "pm.environment.set('password', 'sua_senha');"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{username}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "{{password}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v2/pessoas/{{pessoa_id_v2}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v2",
+                "pessoas",
+                "{{pessoa_id_v2}}"
+              ]
+            },
+            "description": "Deleta uma pessoa existente. Substitua {{pessoa_id_v2}} pelo ID desejado"
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8080",
+      "type": "string",
+      "description": "Base URL da API. Mude para a URL do seu servidor"
+    },
+    {
+      "key": "username",
+      "value": "seu_usuario",
+      "type": "string",
+      "description": "Seu usuário para autenticação Basic Auth"
+    },
+    {
+      "key": "password",
+      "value": "sua_senha",
+      "type": "string",
+      "description": "Sua senha para autenticação Basic Auth"
+    },
+    {
+      "key": "pessoa_id_v1",
+      "value": "1",
+      "type": "string",
+      "description": "ID da pessoa para operações GET, PUT, DELETE em V1"
+    },
+    {
+      "key": "pessoa_id_v2",
+      "value": "1",
+      "type": "string",
+      "description": "ID da pessoa para operações GET, PUT, DELETE em V2"
+    }
+  ]
+}
+
