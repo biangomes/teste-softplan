@@ -6,13 +6,15 @@ services:
     ports:
       - "8080:8080"
     environment:
-      DB_URL: jdbc:postgresql://localhost:5432/teste_softplan
-      DB_USERNAME: postgres
-      DB_PASSWORD: root
+      SPRING_PROFILES_ACTIVE: prod
       USERNAME: softplan
       PASSWORD: softplan123
-    depends_on:
-      - db
+      DB_URL: jdbc:h2:mem:testdb
+      DB_DRIVER: org.h2.Driver
+      DB_USERNAME: sa
+      DB_PASSWORD: ""
+      JPA_DDL_AUTO: create-drop
+      JPA_DIALECT: org.hibernate.dialect.H2Dialect
 
   frontend:
     build:
@@ -24,11 +26,3 @@ services:
       REACT_APP_API_URL: http://localhost:8080/
     depends_on:
       - backend
-
-  db:
-    image: postgres:15
-    container_name: db
-    environment:
-      POSTGRES_DB: jdbc:postgresql://localhost:5432/teste_softplan
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: root

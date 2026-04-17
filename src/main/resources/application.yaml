@@ -1,26 +1,29 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/teste-softplan
-    driver-class-name: org.postgresql.Driver
-    username: postgres # ${DB_USERNAME}
-    password: root      # ${DB_PASSWORD}
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  h2:
+    console:
+      enabled: true
   jpa:
     hibernate:
-      ddl-auto: validate
-    show-sql: true
+      ddl-auto: create-drop
+    show-sql: false
     properties:
       hibernate:
         jdbc:
           time_zone: UTC
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    database-platform: org.hibernate.dialect.H2Dialect
   sql:
     init:
-      mode: never
+      mode: always
 app:
   security:
     basic:
-      username: ${USERNAME}
-      password: ${PASSWORD}
+      username: ${USERNAME:softplan}
+      password: ${PASSWORD:softplan123}
 logging:
   level:
     root: INFO
