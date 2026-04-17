@@ -1,0 +1,20 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
+    container_name: teste-softplan-full
+    ports:
+      - "8080:8080"
+      - "80:80"
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      USERNAME: softplan
+      PASSWORD: softplan123
+      DB_URL: jdbc:h3:mem:testdb
+      DB_DRIVER: org.h2.Driver
+      DB_USERNAME: sa
+      DB_PASSWORD: ""
+      JPA_DDL_AUTO: create-drop
+      JPA_DIALECT: org.hibernate.dialect.H2Dialect
+
