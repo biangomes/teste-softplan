@@ -37,6 +37,18 @@ Para subir a aplicação, obedeça os seguintes passos:
 1. Vá até a pasta `/teste-softplan` pelo terminal
 2. Execute:
 
+Rode:
+
+```bash
+docker run -p 8080:8080 -p 3000:3000 --name teste-softplan -d teste-softplan
+```
+
+ou
+
+```bash
+docker run -p 8080:8080 biangomes/teste-softplan:latest
+```
+
 ```bash
 docker compose up --build
 ```
